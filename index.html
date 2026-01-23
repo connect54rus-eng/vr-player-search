@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
 
+    <!-- Favicon для браузера -->
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Telegram / Social preview -->
+    <meta property="og:title" content="VR — Поиск по ID">
+    <meta property="og:description" content="Мини-приложение для поиска скриншотов игроков по ID">
+    <meta property="og:image" content="icon-512.png">
+    <meta property="og:type" content="website">
+
     <style>
         body {
             background: #0f172a;
@@ -89,7 +101,7 @@
             display: none;
         }
 
-        /* Адаптация для больших экранов (твой Android телефон) */
+        /* Адаптация для больших экранов */
         @media (min-width: 421px) {
             .calc {
                 padding: 24px 30px;
@@ -106,7 +118,7 @@
             }
         }
 
-        /* Для очень маленьких экранов (на всякий случай) */
+        /* Для очень маленьких экранов */
         @media (max-width: 360px) {
             #searchBtn {
                 padding: 0 16px;
