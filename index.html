@@ -88,6 +88,31 @@
             margin-top: 16px;
             display: none;
         }
+
+        /* Адаптация для больших экранов (твой Android телефон) */
+        @media (min-width: 421px) {
+            .calc {
+                padding: 24px 30px;
+                max-width: 460px;
+            }
+
+            #searchBtn {
+                padding: 0 28px;
+                min-width: 90px;
+            }
+
+            .input-row {
+                gap: 12px;
+            }
+        }
+
+        /* Для очень маленьких экранов (на всякий случай) */
+        @media (max-width: 360px) {
+            #searchBtn {
+                padding: 0 16px;
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
