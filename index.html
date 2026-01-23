@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- Favicon -->
+    <!-- Favicon и PWA -->
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="manifest" href="manifest.json">
     <meta property="og:title" content="VR — Поиск по ID">
@@ -74,9 +74,7 @@
             box-sizing: border-box;
         }
 
-        #searchBtn:active {
-            background: #2563eb;
-        }
+        #searchBtn:active { background: #2563eb; }
 
         #result {
             text-align: center;
@@ -98,10 +96,7 @@
         }
 
         @media (min-width: 421px) {
-            .calc {
-                padding: 24px 30px;
-                max-width: 460px;
-            }
+            .calc { padding: 24px 30px; max-width: 460px; }
             #searchBtn { padding: 0 28px; min-width: 90px; }
             .input-row { gap: 12px; }
         }
@@ -122,13 +117,35 @@
             flex-direction:column;
             z-index:1000;
         }
-        #passwordOverlay input {
+
+        #passwordOverlay h2 { color:white; margin-bottom:12px; }
+
+        #passwordWrapper {
+            position:relative;
+            width:200px;
+            display:flex;
+            align-items:center;
+        }
+
+        #passwordInput {
+            width:100%;
             padding:10px;
             font-size:16px;
             border-radius:8px;
             border:none;
-            margin-bottom:8px;
         }
+
+        #togglePassword {
+            position:absolute;
+            right:-35px; /* за пределы поля */
+            top:50%;
+            transform:translateY(-50%);
+            cursor:pointer;
+            user-select:none;
+            color:#fff;
+            font-size:18px;
+        }
+
         #passwordOverlay button {
             padding:6px 16px;
             font-size:16px;
@@ -137,7 +154,9 @@
             background:#3b82f6;
             color:white;
             cursor:pointer;
+            margin-top:8px;
         }
+
         #passwordError {
             color:#f87171;
             margin-top:8px;
@@ -150,7 +169,10 @@
 <!-- Окно для пароля -->
 <div id="passwordOverlay">
     <h2>Введите пароль</h2>
-    <input type="password" id="passwordInput" placeholder="Пароль">
+    <div id="passwordWrapper">
+        <input type="password" id="passwordInput" placeholder="Пароль">
+        <span id="togglePassword">👁</span>
+    </div>
     <button id="passwordBtn">Войти</button>
     <div id="passwordError">Неверный пароль</div>
 </div>
@@ -174,7 +196,7 @@ const overlay = document.getElementById('passwordOverlay');
 const passInput = document.getElementById('passwordInput');
 const passBtn = document.getElementById('passwordBtn');
 const passError = document.getElementById('passwordError');
-
+const toggle = document.getElementById('togglePassword');
 const PASSWORD = "slon2020";
 
 passBtn.addEventListener('click', checkPassword);
@@ -188,7 +210,13 @@ function checkPassword() {
     }
 }
 
-// Код поиска по ID
+// Глазок
+toggle.addEventListener('click', () => {
+    passInput.type = 'text';
+    setTimeout(() => { passInput.type = 'password'; }, 5000);
+});
+
+// Поиск по ID
 const input = document.getElementById('idInput');
 const btn   = document.getElementById('searchBtn');
 const img   = document.getElementById('screenshot');
