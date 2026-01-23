@@ -24,33 +24,36 @@
         }
 
         .calc {
-            max-width: 350px; /* компактнее */
+            max-width: 420px;
             margin: auto;
-            background: #010414; /* темнее */
-            padding: 16px;
+            background: #020617;
+            padding: 20px;
             border-radius: 12px;
+            box-sizing: border-box;
         }
 
         .input-row {
             display: flex;
             gap: 8px;
             margin: 16px 0 24px 0;
-            flex-wrap: wrap; /* кнопка переносится при необходимости */
+            align-items: stretch;
+            flex-wrap: nowrap;
         }
 
         #idInput {
-            flex: 0 0 50%; /* 50% ширины */
-            min-width: 120px; /* минимальная ширина для мобильных */
-            padding: 12px;
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 12px 14px;
             font-size: 17px;
             border-radius: 10px;
             border: none;
             background: #1e293b;
             color: white;
+            box-sizing: border-box;
         }
 
         #searchBtn {
-            padding: 0 24px; /* как в исходном коде */
+            padding: 0 20px;
             font-size: 17px;
             font-weight: bold;
             border-radius: 10px;
@@ -58,7 +61,9 @@
             background: #3b82f6;
             color: white;
             cursor: pointer;
-            flex: 0 0 auto; /* кнопка фиксированной ширины */
+            white-space: nowrap;
+            flex: 0 0 auto;
+            box-sizing: border-box;
         }
 
         #searchBtn:active {
@@ -82,29 +87,6 @@
             font-size: 17px;
             margin-top: 16px;
             display: none;
-        }
-
-        /* Адаптив для экранов меньше 400px */
-        @media (max-width: 400px) {
-            .calc {
-                max-width: 90%; /* подстраивается под экран */
-                padding: 12px;
-            }
-
-            .input-row {
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 6px;
-            }
-
-            #idInput {
-                flex: 1 1 auto; /* подстраивается под оставшееся место */
-                min-width: 60%;
-            }
-
-            #searchBtn {
-                flex: 0 0 auto; /* фиксированная ширина кнопки */
-            }
         }
     </style>
 </head>
