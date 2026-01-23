@@ -24,10 +24,10 @@
         }
 
         .calc {
-            max-width: 420px;
+            max-width: 350px; /* компактнее */
             margin: auto;
-            background: #020617;
-            padding: 20px;
+            background: #010414; /* чуть темнее */
+            padding: 16px; /* меньше padding */
             border-radius: 12px;
         }
 
@@ -37,8 +37,9 @@
             margin: 16px 0 24px 0;
         }
 
+        /* Поле ввода ID уже в 2 раза */
         #idInput {
-            flex: 1;
+            flex: 0 0 50%; /* 50% ширины */
             padding: 12px;
             font-size: 17px;
             border-radius: 10px;
@@ -47,8 +48,9 @@
             color: white;
         }
 
+        /* Кнопка Поиск - оставляем как раньше */
         #searchBtn {
-            padding: 0 24px;
+            padding: 0 24px; /* как в исходном коде */
             font-size: 17px;
             font-weight: bold;
             border-radius: 10px;
@@ -79,6 +81,17 @@
             font-size: 17px;
             margin-top: 16px;
             display: none;
+        }
+
+        /* Адаптив для узких экранов */
+        @media (max-width: 360px) {
+            .input-row {
+                flex-direction: column;
+            }
+
+            #idInput, #searchBtn {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
@@ -116,7 +129,6 @@
         img.style.display = 'none';
         notFound.style.display = 'none';
 
-        // Путь к файлу: предполагается, что файл лежит рядом с html
         const url = `./${id}.webp`;
 
         const testImg = new Image();
@@ -127,7 +139,7 @@
         testImg.onerror = () => {
             notFound.style.display = 'block';
         };
-        testImg.src = url;  // запускаем проверку
+        testImg.src = url;
     }
 </script>
 
