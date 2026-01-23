@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- Favicon и PWA -->
+    <!-- Favicon для браузера -->
     <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- PWA manifest -->
     <link rel="manifest" href="manifest.json">
+
+    <!-- Telegram / Social preview -->
     <meta property="og:title" content="VR — Поиск по ID">
     <meta property="og:description" content="Мини-приложение для поиска скриншотов игроков по ID">
     <meta property="og:image" content="icon-512.png">
@@ -74,7 +78,9 @@
             box-sizing: border-box;
         }
 
-        #searchBtn:active { background: #2563eb; }
+        #searchBtn:active {
+            background: #2563eb;
+        }
 
         #result {
             text-align: center;
@@ -95,87 +101,33 @@
             display: none;
         }
 
+        /* Адаптация для больших экранов */
         @media (min-width: 421px) {
-            .calc { padding: 24px 30px; max-width: 460px; }
-            #searchBtn { padding: 0 28px; min-width: 90px; }
-            .input-row { gap: 12px; }
+            .calc {
+                padding: 24px 30px;
+                max-width: 460px;
+            }
+
+            #searchBtn {
+                padding: 0 28px;
+                min-width: 90px;
+            }
+
+            .input-row {
+                gap: 12px;
+            }
         }
 
+        /* Для очень маленьких экранов */
         @media (max-width: 360px) {
-            #searchBtn { padding: 0 16px; font-size: 16px; }
-        }
-
-        /* Стили для пароля */
-        #passwordOverlay {
-            position: fixed;
-            top:0; left:0;
-            width:100%; height:100%;
-            background:#0f172a;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            flex-direction:column;
-            z-index:1000;
-        }
-
-        #passwordOverlay h2 { color:white; margin-bottom:12px; }
-
-        #passwordWrapper {
-            position:relative;
-            width:200px;
-            display:flex;
-            align-items:center;
-        }
-
-        #passwordInput {
-            width:100%;
-            padding:10px;
-            font-size:16px;
-            border-radius:8px;
-            border:none;
-        }
-
-        #togglePassword {
-            position:absolute;
-            right:-35px; /* за пределы поля */
-            top:50%;
-            transform:translateY(-50%);
-            cursor:pointer;
-            user-select:none;
-            color:#fff;
-            font-size:18px;
-        }
-
-        #passwordOverlay button {
-            padding:6px 16px;
-            font-size:16px;
-            border-radius:8px;
-            border:none;
-            background:#3b82f6;
-            color:white;
-            cursor:pointer;
-            margin-top:8px;
-        }
-
-        #passwordError {
-            color:#f87171;
-            margin-top:8px;
-            display:none;
+            #searchBtn {
+                padding: 0 16px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-
-<!-- Окно для пароля -->
-<div id="passwordOverlay">
-    <h2>Введите пароль</h2>
-    <div id="passwordWrapper">
-        <input type="password" id="passwordInput" placeholder="Пароль">
-        <span id="togglePassword">👁</span>
-    </div>
-    <button id="passwordBtn">Войти</button>
-    <div id="passwordError">Неверный пароль</div>
-</div>
 
 <h1>VR — Поиск по ID</h1>
 
@@ -192,50 +144,35 @@
 </div>
 
 <script>
-const overlay = document.getElementById('passwordOverlay');
-const passInput = document.getElementById('passwordInput');
-const passBtn = document.getElementById('passwordBtn');
-const passError = document.getElementById('passwordError');
-const toggle = document.getElementById('togglePassword');
-const PASSWORD = "slon2020";
+    const input = document.getElementById('idInput');
+    const btn   = document.getElementById('searchBtn');
+    const img   = document.getElementById('screenshot');
+    const notFound = document.getElementById('notFound');
 
-passBtn.addEventListener('click', checkPassword);
-passInput.addEventListener('keypress', e => { if(e.key==='Enter') checkPassword(); });
+    btn.addEventListener('click', search);
+    input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') search();
+    });
 
-function checkPassword() {
-    if(passInput.value === PASSWORD){
-        overlay.style.display = 'none';
-    } else {
-        passError.style.display = 'block';
+    function search() {
+        let id = input.value.trim();
+        if (!id) return;
+
+        img.style.display = 'none';
+        notFound.style.display = 'none';
+
+        const url = `./${id}.webp`;
+
+        const testImg = new Image();
+        testImg.onload = () => {
+            img.src = url;
+            img.style.display = 'block';
+        };
+        testImg.onerror = () => {
+            notFound.style.display = 'block';
+        };
+        testImg.src = url;
     }
-}
-
-// Глазок
-toggle.addEventListener('click', () => {
-    passInput.type = 'text';
-    setTimeout(() => { passInput.type = 'password'; }, 5000);
-});
-
-// Поиск по ID
-const input = document.getElementById('idInput');
-const btn   = document.getElementById('searchBtn');
-const img   = document.getElementById('screenshot');
-const notFound = document.getElementById('notFound');
-
-btn.addEventListener('click', search);
-input.addEventListener('keypress', e => { if(e.key==='Enter') search(); });
-
-function search() {
-    let id = input.value.trim();
-    if (!id) return;
-    img.style.display = 'none';
-    notFound.style.display = 'none';
-    const url = `./${id}.webp`;
-    const testImg = new Image();
-    testImg.onload = () => { img.src = url; img.style.display='block'; };
-    testImg.onerror = () => { notFound.style.display='block'; };
-    testImg.src = url;
-}
 </script>
 
 </body>
