@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- Favicon для браузера -->
+    <!-- Favicon -->
     <link rel="icon" href="favicon.png" type="image/png">
 
     <!-- PWA manifest -->
     <link rel="manifest" href="manifest.json">
 
-    <!-- Telegram / Social preview -->
+    <!-- Social preview -->
     <meta property="og:title" content="VR — Поиск по ID">
     <meta property="og:description" content="Мини-приложение для поиска скриншотов игроков по ID">
     <meta property="og:image" content="icon-512.png">
@@ -101,7 +101,24 @@
             display: none;
         }
 
-        /* Адаптация для больших экранов */
+        /* КНОПКА ПОДЕЛИТЬСЯ */
+        #shareBtn {
+            margin-top: 14px;
+            padding: 12px 20px;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 10px;
+            border: none;
+            background: #22c55e;
+            color: #020617;
+            cursor: pointer;
+            display: none;
+        }
+
+        #shareBtn:active {
+            background: #16a34a;
+        }
+
         @media (min-width: 421px) {
             .calc {
                 padding: 24px 30px;
@@ -118,7 +135,6 @@
             }
         }
 
-        /* Для очень маленьких экранов */
         @media (max-width: 360px) {
             #searchBtn {
                 padding: 0 16px;
@@ -140,14 +156,16 @@
     <div id="result">
         <img id="screenshot" alt="Скриншот игрока">
         <div id="notFound">ID не найден</div>
+        <button id="shareBtn">Поделиться в Telegram</button>
     </div>
 </div>
 
 <script>
     const input = document.getElementById('idInput');
-    const btn   = document.getElementById('searchBtn');
-    const img   = document.getElementById('screenshot');
+    const btn = document.getElementById('searchBtn');
+    const img = document.getElementById('screenshot');
     const notFound = document.getElementById('notFound');
+    const shareBtn = document.getElementById('shareBtn');
 
     btn.addEventListener('click', search);
     input.addEventListener('keypress', e => {
@@ -155,11 +173,12 @@
     });
 
     function search() {
-        let id = input.value.trim();
+        const id = input.value.trim();
         if (!id) return;
 
         img.style.display = 'none';
         notFound.style.display = 'none';
+        shareBtn.style.display = 'none';
 
         const url = `./${id}.webp`;
 
@@ -167,10 +186,22 @@
         testImg.onload = () => {
             img.src = url;
             img.style.display = 'block';
+            shareBtn.style.display = 'inline-block';
+
+            shareBtn.onclick = () => {
+                const tgUrl =
+                    `https://t.me/share/url?` +
+                    `url=${encodeURIComponent(location.origin + location.pathname.replace(/\/[^\/]*$/, '/') + id + '.webp')}` +
+                    `&text=${encodeURIComponent('VR — скриншот игрока ID: ' + id)}`;
+
+                window.open(tgUrl, '_blank');
+            };
         };
+
         testImg.onerror = () => {
             notFound.style.display = 'block';
         };
+
         testImg.src = url;
     }
 </script>
