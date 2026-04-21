@@ -62,8 +62,6 @@
             cursor: pointer;
         }
 
-        #passBtn:active { background: #2563eb; }
-
         #passError {
             color: #f87171;
             margin-top: 15px;
@@ -77,7 +75,6 @@
             font-size: 22px;
             margin: 0 0 16px 0; 
             line-height: 1.2;
-            user-select: none;
         }
 
         .calc {
@@ -94,12 +91,11 @@
             gap: 8px;
             margin: 16px 0 24px 0;
             align-items: stretch;
-            width: 100%;
         }
 
+        /* УМЕНЬШЕННОЕ ПОЛЕ ВВОДА */
         #idInput {
-            flex: 0 1 60%; /* Уменьшили до 60% ширины */
-            min-width: 0;
+            width: 60%; /* Поле занимает 60% ширины, чтобы кнопка влезла */
             padding: 12px 14px;
             font-size: 17px;
             border-radius: 10px;
@@ -107,10 +103,11 @@
             background: #1e293b;
             color: white;
             outline: none;
+            box-sizing: border-box;
         }
 
         #searchBtn {
-            flex: 1 0 auto; /* Кнопка занимает оставшееся место, не сжимаясь */
+            flex: 1; /* Кнопка занимает остаток места */
             padding: 0 15px;
             font-size: 17px;
             font-weight: bold;
@@ -121,8 +118,6 @@
             cursor: pointer;
             white-space: nowrap;
         }
-
-        #searchBtn:active { background: #2563eb; }
 
         #result { text-align: center; margin-top: 12px; }
 
@@ -148,14 +143,10 @@
             cursor: pointer;
             display: none;
             width: 100%;
-            box-sizing: border-box;
         }
-
-        #shareBtn:active { background: #16a34a; }
 
         @media (min-width: 421px) {
             .calc { padding: 24px 30px; max-width: 460px; }
-            #searchBtn { padding: 0 25px; }
             #authScreen { padding-top: 60px; }
         }
     </style>
@@ -184,6 +175,7 @@
 </div>
 
 <script>
+    // 1. АВТОРИЗАЦИЯ
     const authScreen = document.getElementById('authScreen');
     const passInput = document.getElementById('passInput');
     const passBtn = document.getElementById('passBtn');
@@ -201,6 +193,7 @@
     passBtn.addEventListener('click', checkPass);
     passInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkPass(); });
 
+    // 2. ПОИСК (ВАШ ОРИГИНАЛЬНЫЙ КОД)
     const input = document.getElementById('idInput');
     const btn = document.getElementById('searchBtn');
     const img = document.getElementById('screenshot');
@@ -208,7 +201,9 @@
     const shareBtn = document.getElementById('shareBtn');
 
     btn.addEventListener('click', search);
-    input.addEventListener('keypress', e => { if (e.key === 'Enter') search(); });
+    input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') search();
+    });
 
     function search() {
         const id = input.value.trim();
@@ -219,20 +214,27 @@
         shareBtn.style.display = 'none';
 
         const url = `./${id}.webp`;
-        const testImg = new Image();
 
+        const testImg = new Image();
         testImg.onload = () => {
             img.src = url;
             img.style.display = 'block';
-            shareBtn.style.display = 'block';
+            shareBtn.style.display = 'inline-block';
 
             shareBtn.onclick = () => {
-                const tgUrl = `https://t.me{encodeURIComponent(location.origin + location.pathname.replace(/\/[^\/]*$/, '/') + id + '.webp')}&text=${encodeURIComponent('VR — скриншот игрока ID: ' + id)}`;
+                const tgUrl =
+                    `https://t.me?` +
+                    `url=${encodeURIComponent(location.origin + location.pathname.replace(/\/[^\/]*$/, '/') + id + '.webp')}` +
+                    `&text=${encodeURIComponent('VR — скриншот игрока ID: ' + id)}`;
+
                 window.open(tgUrl, '_blank');
             };
         };
 
-        testImg.onerror = () => { notFound.style.display = 'block'; };
+        testImg.onerror = () => {
+            notFound.style.display = 'block';
+        };
+
         testImg.src = url;
     }
 </script>
