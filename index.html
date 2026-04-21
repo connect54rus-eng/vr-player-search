@@ -6,8 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
 
+    <!-- Favicon -->
     <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- PWA manifest -->
     <link rel="manifest" href="manifest.json">
+
+    <!-- Social preview -->
+    <meta property="og:title" content="VR — Поиск по ID">
+    <meta property="og:description" content="Мини-приложение для поиска скриншотов игроков по ID">
+    <meta property="og:image" content="icon-512.png">
+    <meta property="og:type" content="website">
 
     <style>
         body {
@@ -16,67 +25,13 @@
             font-family: Arial, sans-serif;
             padding: 20px;
             margin: 0;
-            overflow-x: hidden;
         }
 
-        /* ЭКРАН ПАРОЛЯ */
-        #authScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0f172a;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 56px; 
-            box-sizing: border-box;
-        }
-
-        #passInput {
-            width: 100%;
-            max-width: 280px;
-            padding: 14px;
-            border-radius: 12px;
-            border: 2px solid #1e293b;
-            background: #020617;
-            color: white;
-            text-align: center;
-            font-size: 20px;
-            margin-bottom: 15px;
-            outline: none;
-        }
-
-        #passBtn {
-            width: 100%;
-            max-width: 280px;
-            padding: 14px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 17px;
-            cursor: pointer;
-        }
-
-        #passBtn:active { background: #2563eb; }
-
-        #passError {
-            color: #f87171;
-            margin-top: 15px;
-            display: none;
-            font-size: 15px;
-        }
-
-        /* ГЛАВНЫЙ КОНТЕНТ */
         h1 {
             text-align: center;
             font-size: 22px;
-            margin: 0 0 16px 0; 
-            line-height: 1.2;
+            margin: 0 0 16px 0;
+            cursor: default;
             user-select: none;
         }
 
@@ -94,25 +49,24 @@
             gap: 8px;
             margin: 16px 0 24px 0;
             align-items: stretch;
-            flex-wrap: nowrap; /* ПРАВКА: запрет переноса на новую строку */
+            flex-wrap: nowrap;
         }
 
         #idInput {
-            width: 65%; /* ПРАВКА: ограничение ширины поля ввода */
+            flex: 1 1 auto;
+            min-width: 0;
             padding: 12px 14px;
-            font-size: 16px; /* ПРАВКА: чуть меньше шрифт для экономии места */
+            font-size: 17px;
             border-radius: 10px;
             border: none;
             background: #1e293b;
             color: white;
-            outline: none;
             box-sizing: border-box;
         }
 
         #searchBtn {
-            flex: 1; /* Кнопка займет оставшееся место */
-            padding: 0 10px;
-            font-size: 16px; /* ПРАВКА: шрифт в тон полю ввода */
+            padding: 0 20px;
+            font-size: 17px;
             font-weight: bold;
             border-radius: 10px;
             border: none;
@@ -120,23 +74,37 @@
             color: white;
             cursor: pointer;
             white-space: nowrap;
+            flex: 0 0 auto;
+            box-sizing: border-box;
         }
 
-        #result { text-align: center; margin-top: 12px; }
+        #searchBtn:active {
+            background: #2563eb;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 12px;
+        }
 
         #screenshot {
             max-width: 100%;
             border-radius: 8px;
             border: 1px solid #334155;
             display: none;
-            margin: 0 auto;
         }
 
-        #notFound { color: #f87171; font-size: 17px; margin-top: 16px; display: none; }
+        #notFound {
+            color: #f87171;
+            font-size: 17px;
+            margin-top: 16px;
+            display: none;
+        }
 
+        /* КНОПКА ПОДЕЛИТЬСЯ */
         #shareBtn {
             margin-top: 14px;
-            padding: 14px 20px;
+            padding: 12px 20px;
             font-size: 17px;
             font-weight: bold;
             border-radius: 10px;
@@ -145,27 +113,37 @@
             color: #020617;
             cursor: pointer;
             display: none;
-            width: 100%;
-            box-sizing: border-box;
         }
 
-        #shareBtn:active { background: #16a34a; }
+        #shareBtn:active {
+            background: #16a34a;
+        }
 
         @media (min-width: 421px) {
-            .calc { padding: 24px 30px; max-width: 460px; }
-            #searchBtn { padding: 0 28px; }
-            #authScreen { padding-top: 60px; }
+            .calc {
+                padding: 24px 30px;
+                max-width: 460px;
+            }
+
+            #searchBtn {
+                padding: 0 28px;
+                min-width: 90px;
+            }
+
+            .input-row {
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            #searchBtn {
+                padding: 0 16px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-
-<!-- Экран пароля -->
-<div id="authScreen">
-    <input type="tel" id="passInput" placeholder="Введите пароль" autocomplete="off">
-    <button id="passBtn">Войти</button>
-    <div id="passError">Неверный пароль</div>
-</div>
 
 <h1>VR — Поиск по ID</h1>
 
@@ -183,25 +161,6 @@
 </div>
 
 <script>
-    // 1. ЛОГИКА ПАРОЛЯ
-    const authScreen = document.getElementById('authScreen');
-    const passInput = document.getElementById('passInput');
-    const passBtn = document.getElementById('passBtn');
-    const passError = document.getElementById('passError');
-    const CORRECT_PASSWORD = "4081";
-
-    function checkPass() {
-        if (passInput.value === CORRECT_PASSWORD) {
-            authScreen.style.display = 'none';
-        } else {
-            passError.style.display = 'block';
-            passInput.value = '';
-        }
-    }
-    passBtn.addEventListener('click', checkPass);
-    passInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkPass(); });
-
-    // 2. ЛОГИКА ПОИСКА (ТВОЯ ОРИГИНАЛЬНАЯ)
     const input = document.getElementById('idInput');
     const btn = document.getElementById('searchBtn');
     const img = document.getElementById('screenshot');
@@ -227,7 +186,7 @@
         testImg.onload = () => {
             img.src = url;
             img.style.display = 'block';
-            shareBtn.style.display = 'block'; // Показываем кнопку
+            shareBtn.style.display = 'inline-block';
 
             shareBtn.onclick = () => {
                 const tgUrl =
