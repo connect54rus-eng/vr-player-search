@@ -231,7 +231,7 @@
 
             shareBtn.onclick = () => {
                 const tgUrl =
-                    `https://t.me?` +
+                    `https://t.me/share/url?` +
                     `url=${encodeURIComponent(location.origin + location.pathname.replace(/\/[^\/]*$/, '/') + id + '.webp')}` +
                     `&text=${encodeURIComponent('VR — скриншот игрока ID: ' + id)}`;
 
