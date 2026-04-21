@@ -62,6 +62,8 @@
             cursor: pointer;
         }
 
+        #passBtn:active { background: #2563eb; }
+
         #passError {
             color: #f87171;
             margin-top: 15px;
@@ -75,6 +77,7 @@
             font-size: 22px;
             margin: 0 0 16px 0; 
             line-height: 1.2;
+            user-select: none;
         }
 
         .calc {
@@ -91,13 +94,13 @@
             gap: 8px;
             margin: 16px 0 24px 0;
             align-items: stretch;
+            flex-wrap: nowrap; /* ПРАВКА: запрет переноса на новую строку */
         }
 
-        /* УМЕНЬШЕННОЕ ПОЛЕ ВВОДА */
         #idInput {
-            width: 60%; /* Поле занимает 60% ширины, чтобы кнопка влезла */
+            width: 65%; /* ПРАВКА: ограничение ширины поля ввода */
             padding: 12px 14px;
-            font-size: 17px;
+            font-size: 16px; /* ПРАВКА: чуть меньше шрифт для экономии места */
             border-radius: 10px;
             border: none;
             background: #1e293b;
@@ -107,9 +110,9 @@
         }
 
         #searchBtn {
-            flex: 1; /* Кнопка занимает остаток места */
-            padding: 0 15px;
-            font-size: 17px;
+            flex: 1; /* Кнопка займет оставшееся место */
+            padding: 0 10px;
+            font-size: 16px; /* ПРАВКА: шрифт в тон полю ввода */
             font-weight: bold;
             border-radius: 10px;
             border: none;
@@ -143,16 +146,21 @@
             cursor: pointer;
             display: none;
             width: 100%;
+            box-sizing: border-box;
         }
+
+        #shareBtn:active { background: #16a34a; }
 
         @media (min-width: 421px) {
             .calc { padding: 24px 30px; max-width: 460px; }
+            #searchBtn { padding: 0 28px; }
             #authScreen { padding-top: 60px; }
         }
     </style>
 </head>
 <body>
 
+<!-- Экран пароля -->
 <div id="authScreen">
     <input type="tel" id="passInput" placeholder="Введите пароль" autocomplete="off">
     <button id="passBtn">Войти</button>
@@ -175,7 +183,7 @@
 </div>
 
 <script>
-    // 1. АВТОРИЗАЦИЯ
+    // 1. ЛОГИКА ПАРОЛЯ
     const authScreen = document.getElementById('authScreen');
     const passInput = document.getElementById('passInput');
     const passBtn = document.getElementById('passBtn');
@@ -193,7 +201,7 @@
     passBtn.addEventListener('click', checkPass);
     passInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkPass(); });
 
-    // 2. ПОИСК (ВАШ ОРИГИНАЛЬНЫЙ КОД)
+    // 2. ЛОГИКА ПОИСКА (ТВОЯ ОРИГИНАЛЬНАЯ)
     const input = document.getElementById('idInput');
     const btn = document.getElementById('searchBtn');
     const img = document.getElementById('screenshot');
@@ -219,7 +227,7 @@
         testImg.onload = () => {
             img.src = url;
             img.style.display = 'block';
-            shareBtn.style.display = 'inline-block';
+            shareBtn.style.display = 'block'; // Показываем кнопку
 
             shareBtn.onclick = () => {
                 const tgUrl =
