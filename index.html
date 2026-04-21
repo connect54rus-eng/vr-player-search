@@ -94,10 +94,12 @@
             gap: 8px;
             margin: 16px 0 24px 0;
             align-items: stretch;
+            width: 100%;
         }
 
         #idInput {
-            flex: 1;
+            flex: 0 1 60%; /* Уменьшили до 60% ширины */
+            min-width: 0;
             padding: 12px 14px;
             font-size: 17px;
             border-radius: 10px;
@@ -108,7 +110,8 @@
         }
 
         #searchBtn {
-            padding: 0 20px;
+            flex: 1 0 auto; /* Кнопка занимает оставшееся место, не сжимаясь */
+            padding: 0 15px;
             font-size: 17px;
             font-weight: bold;
             border-radius: 10px;
@@ -118,6 +121,8 @@
             cursor: pointer;
             white-space: nowrap;
         }
+
+        #searchBtn:active { background: #2563eb; }
 
         #result { text-align: center; margin-top: 12px; }
 
@@ -150,14 +155,13 @@
 
         @media (min-width: 421px) {
             .calc { padding: 24px 30px; max-width: 460px; }
-            #searchBtn { padding: 0 28px; }
+            #searchBtn { padding: 0 25px; }
             #authScreen { padding-top: 60px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Экран пароля -->
 <div id="authScreen">
     <input type="tel" id="passInput" placeholder="Введите пароль" autocomplete="off">
     <button id="passBtn">Войти</button>
@@ -180,7 +184,6 @@
 </div>
 
 <script>
-    // 1. ЛОГИКА ПАРОЛЯ
     const authScreen = document.getElementById('authScreen');
     const passInput = document.getElementById('passInput');
     const passBtn = document.getElementById('passBtn');
@@ -198,7 +201,6 @@
     passBtn.addEventListener('click', checkPass);
     passInput.addEventListener('keypress', e => { if (e.key === 'Enter') checkPass(); });
 
-    // 2. ЛОГИКА ПОИСКА (ТВОЯ ОРИГИНАЛЬНАЯ)
     const input = document.getElementById('idInput');
     const btn = document.getElementById('searchBtn');
     const img = document.getElementById('screenshot');
@@ -206,9 +208,7 @@
     const shareBtn = document.getElementById('shareBtn');
 
     btn.addEventListener('click', search);
-    input.addEventListener('keypress', e => {
-        if (e.key === 'Enter') search();
-    });
+    input.addEventListener('keypress', e => { if (e.key === 'Enter') search(); });
 
     function search() {
         const id = input.value.trim();
@@ -219,27 +219,20 @@
         shareBtn.style.display = 'none';
 
         const url = `./${id}.webp`;
-
         const testImg = new Image();
+
         testImg.onload = () => {
             img.src = url;
             img.style.display = 'block';
-            shareBtn.style.display = 'block'; // Показываем кнопку
+            shareBtn.style.display = 'block';
 
             shareBtn.onclick = () => {
-                const tgUrl =
-                    `https://t.me/share/url?` +
-                    `url=${encodeURIComponent(location.origin + location.pathname.replace(/\/[^\/]*$/, '/') + id + '.webp')}` +
-                    `&text=${encodeURIComponent('VR — скриншот игрока ID: ' + id)}`;
-
+                const tgUrl = `https://t.me{encodeURIComponent(location.origin + location.pathname.replace(/\/[^\/]*$/, '/') + id + '.webp')}&text=${encodeURIComponent('VR — скриншот игрока ID: ' + id)}`;
                 window.open(tgUrl, '_blank');
             };
         };
 
-        testImg.onerror = () => {
-            notFound.style.display = 'block';
-        };
-
+        testImg.onerror = () => { notFound.style.display = 'block'; };
         testImg.src = url;
     }
 </script>
