@@ -23,14 +23,14 @@
             background: #0f172a;
             color: #e5e7eb;
             font-family: Arial, sans-serif;
-            padding: 20px;
+            padding: 10px;
             margin: 0;
         }
 
         h1 {
             text-align: center;
             font-size: 22px;
-            margin: 0 0 16px 0;
+            margin: 0 0 8px 0;
             cursor: default;
             user-select: none;
         }
@@ -39,21 +39,22 @@
             max-width: 420px;
             margin: auto;
             background: #020617;
-            padding: 20px;
+            padding: 16px; /* Одинаковый отступ 16px со всех четырех сторон */
             border-radius: 12px;
             box-sizing: border-box;
         }
 
         .input-row {
             display: flex;
-            gap: 8px;
-            margin: 16px 0 24px 0;
+            gap: 12px;
+            margin: 0 0 0px 0; /* Оставили отступ только снизу, чтобы отделить от картинки */
             align-items: stretch;
+            justify-content: center;
             flex-wrap: nowrap;
         }
 
         #idInput {
-            flex: 1 1 auto;
+            flex: 6; /* Занимает 6 частей пространства */
             min-width: 0;
             padding: 12px 14px;
             font-size: 17px;
@@ -65,7 +66,8 @@
         }
 
         #searchBtn {
-            padding: 0 20px;
+            flex: 4; /* Занимает 4 части пространства (чуть меньше поля) */
+            padding: 0;
             font-size: 17px;
             font-weight: bold;
             border-radius: 10px;
@@ -74,7 +76,6 @@
             color: white;
             cursor: pointer;
             white-space: nowrap;
-            flex: 0 0 auto;
             box-sizing: border-box;
         }
 
@@ -84,14 +85,22 @@
 
         #result {
             text-align: center;
-            margin-top: 12px;
-        }
+            margin-top: 0;      /* Убираем лишний внешний отступ сверху */
+	    padding: 0; 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;          /* Это создаст одинаковые зазоры между картинкой и кнопкой */
+                }
 
         #screenshot {
-            max-width: 100%;
+            width: 100%;
+            display: none;
+            margin-top: 0;   /* Гарантируем отсутствие отступа сверху */
             border-radius: 8px;
             border: 1px solid #334155;
-            display: none;
+            box-sizing: border-box;
         }
 
         #notFound {
@@ -103,7 +112,7 @@
 
         /* КНОПКА ПОДЕЛИТЬСЯ */
         #shareBtn {
-            margin-top: 14px;
+	    margin-top: 14px;
             padding: 12px 20px;
             font-size: 17px;
             font-weight: bold;
@@ -121,7 +130,7 @@
 
         @media (min-width: 421px) {
             .calc {
-                padding: 24px 30px;
+                padding: 10px 15px;
                 max-width: 460px;
             }
 
@@ -130,9 +139,14 @@
                 min-width: 90px;
             }
 
-            .input-row {
-                gap: 12px;
-            }
+            	.input-row {
+            display: flex;
+            gap: 12px;           /* Фиксированный зазор между элементами */
+            margin: 16px 0 24px 0;
+            align-items: stretch;
+            justify-content: center; /* Центрирует содержимое, если есть лишнее место */
+            flex-wrap: nowrap;
+        }
         }
 
         @media (max-width: 360px) {
